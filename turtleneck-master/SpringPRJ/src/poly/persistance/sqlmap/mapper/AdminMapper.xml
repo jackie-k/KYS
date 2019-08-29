@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- JAVA와 연결할 Mapper 파일 설정 -->
+<mapper namespace="poly.persistance.mapper.AdminMapper">
+
+<select id = "adminReceive" parameterType = "AdminDTO" resultType = "java.lang.Integer">
+
+select count(*)
+from
+	USER_INFO
+where
+	USR_EMAIL_ADDR = #{adminEmail} and
+	PASSWORD = #{adminPassword}
+
+</select>
+
+<select id="getMemberList" resultType="AdminDTO">
+	SELECT
+		SRBDE AS regDate,
+		USR_SEQ_NO AS seq,
+		USR_NAME AS name,
+		USR_EMAIL_ADDR AS email
+	FROM
+		USER_INFO
+</select>
+
+<select id="getMemberDetail" parameterType="String" resultType="AdminDTO">
+	SELECT
+		SRBDE AS regDate,
+		USR_SEQ_NO AS seq,
+		USR_NAME AS name,
+		USR_EMAIL_ADDR AS email
+	FROM
+		USER_INFO
+	WHERE
+		USR_SEQ_NO = #{seq}
+</select>
+
+<update id="updateMember" parameterType="AdminDTO">
+	UPDATE
+		USER_INFO
+	SET
+		USR_NAME = #{name},
+		USR_EMAIL_ADDR = #{email}
+	WHERE
+		USR_SEQ_NO = #{seq}
+</update>
+
+</mapper>

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="poly.persistance.mapper.UserMapper">
+<insert id="userRegProc" parameterType="UserDTO">
+	INSERT
+	INTO
+	USER_INFO
+	(
+		USR_SEQ_NO,
+		USR_EMAIL_ADDR,
+		USR_NAME,
+		PASSWORD,
+		SRBDE,
+		BIRTH,
+		GENDER,
+		PHONE_NUM,
+		USR_QUESTION,
+		USR_ANSWER
+	)
+	VALUES
+	(
+		USER_INFO_SEQ.NEXTVAL,
+		#{userEmail},
+		#{userName},
+		#{userPassword},
+		SYSDATE,
+		#{userBirth},
+		#{userGender},
+		#{userPhone},
+		#{userQuestion},
+		#{userAnswer}
+	)
+	
+</insert>
+<select id="getUserInfo" parameterType="UserDTO" resultType="UserDTO">
+SELECT
+	USR_SEQ_NO AS userSeq,
+	USR_EMAIL_ADDR AS userEmail,
+	USR_NAME AS userName
+FROM USER_INFO
+WHERE USR_EMAIL_ADDR = #{userEmail} AND PASSWORD = #{userPassword}
+</select>
+
+<select id="forgetEmail" parameterType="UserDTO" resultType="int">
+select count(*)
+from
+  USER_INFO
+where
+  USR_NAME = #{userName} and
+  PHONE_NUM = #{userPhone}
+
+</select>
+<select id="email1" parameterType="UserDTO" resultType="String">
+SELECT SUBSTR(USR_EMAIL_ADDR,1,1)
+FROM
+ USER_INFO
+WHERE
+  USR_NAME = #{userName} and
+  PHONE_NUM = #{userPhone}
+</select>
+<select id="email2" parameterType="UserDTO" resultType="String">
+SELECT SUBSTR(USR_EMAIL_ADDR,7)
+FROM
+ USER_INFO
+WHERE
+  USR_NAME = #{userName} and
+  PHONE_NUM = #{userPhone}
+</select>
+<select id="forgetPassword" parameterType="UserDTO" resultType="int">
+select count(*)
+from
+  USER_INFO
+where
+  USR_EMAIL_ADDR = #{userEmail}
+
+</select>
+<select id="pw" parameterType="UserDTO" resultType="String">
+SELECT PASSWORD
+FROM
+ USER_INFO
+WHERE
+  (SELECT USR_ANSWER FROM USER_INFO WHERE USR_QUESTION=#{userQuestion}) = #{userAnswer}
+</select>
+<select id="que" parameterType="UserDTO" resultType="String">
+SELECT USR_QUESTION
+FROM
+ USER_INFO
+WHERE
+  USR_EMAIL_ADDR = #{userEmail}
+</select>
+<select id="answer" parameterType="UserDTO" resultType="int">
+select count(*)
+FROM
+ USER_INFO
+WHERE
+  (
+  	SELECT 
+  		USR_ANSWER 
+  	FROM 
+  		USER_INFO 
+  	WHERE 
+  		USR_QUESTION=#{userQuestion}
+   ) = #{userAnswer}
+	
+</select>
+<select id="pCheck" parameterType="String" resultType="int">
+SELECT COUNT(*)
+FROM
+	USER_INFO
+WHERE
+	PHONE_NUM=#{userPhone}
+</select>
+</mapper>
